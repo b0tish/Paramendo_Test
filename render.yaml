@@ -3,18 +3,20 @@ services:
     name: laravel-app
     env: docker
     plan: free
-    buildCommand: ""
-    startCommand: "apache2-foreground"
+    autoDeploy: true
+
+    # Docker services don't need startCommand or buildCommand
+    # since Dockerfile defines them.
+
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
       - key: APP_URL
-        value: https://your-laravel-app.onrender.com
+        value: https://laravel-app.onrender.com
       - key: DB_CONNECTION
         value: pgsql
       - fromDatabase:
           name: laravel-db
           property: connectionString
-
