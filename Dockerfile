@@ -1,42 +1,13 @@
-# Use official PHP 8.2 with Apache
-FROM php:8.2-apache
+FROM richarvey/nginx-php-fpm:3.1.6
 
-# Install dependencies and PostgreSQL driver
-RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpq-dev && \
-    docker-php-ext-install pdo pdo_pgsql
+# Copy your entire application into the webroot
+COPY . /var/www/html
 
-# Enable Apache mod_rewrite for Laravel
-RUN a2enmod rewrite
+# Exclude installing composer dependencies during the initial build
+# We will handle it with a deploy script instead
+ENV SKIP_COMPOSER 1 
+ENV WEBROOT /var/www/html/public
+ENV PHP_ERRORS_STDERR 1
+ENV RUN_SCRIPTS 1
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Copy project files
-COPY . .
-
-# Install Composer
-COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
-
-# Install Laravel dependencies (optimized, no dev)
-RUN composer install --no-dev --optimize-autoloader
-
-# ✅ Configure Apache to serve from /public
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
- && sed -i 's|/var/www/|/var/www/html/public/|g' /etc/apache2/apache2.conf
-
-# ✅ Enable .htaccess rules
-RUN echo "<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>" > /etc/apache2/conf-available/laravel.conf && \
-    a2enconf laravel
-
-# ✅ Fix permissions for storage and cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Expose port 80
-EXPOSE 80
-
-# ✅ Startup Script: runs Laravel setup tasks, then launches Apache
-CMD ["apache2-foreground"]
+CMD ["/start.sh"]
