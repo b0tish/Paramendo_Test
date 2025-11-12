@@ -5,9 +5,6 @@ services:
     plan: free
     autoDeploy: true
 
-    # Docker services don't need startCommand or buildCommand
-    # since Dockerfile defines them.
-
     envVars:
       - key: APP_ENV
         value: production
@@ -17,6 +14,12 @@ services:
         value: https://laravel-app.onrender.com
       - key: DB_CONNECTION
         value: pgsql
-      - fromDatabase:
+      - key: DATABASE_URL
+        fromDatabase:
           name: laravel-db
           property: connectionString
+
+databases:
+  - name: laravel-db
+    plan: free
+
