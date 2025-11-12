@@ -49,5 +49,3 @@ services:
     name: paramendo-db
     env: postgres
     plan: free # Optional: remove or change to a paid plan
-    postgres:
-      version: "14"
