@@ -1,0 +1,53 @@
+services:
+  # Web Service for the Laravel Application
+  - type: web
+    name: paramendo-eco-farming-stay
+    env: php
+    plan: free # Optional: remove or change to a paid plan
+    buildCommand: |
+      composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+      php artisan migrate --force
+    startCommand: php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_URL
+        fromService:
+          type: web
+          name: paramendo-eco-farming-stay
+          property: url
+      - key: APP_KEY
+        generateValue: true # Render will generate a secure key for you
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: paramendo-db
+          property: host
+      - key: DB_PORT
+        fromService:
+          type: pserv
+          name: paramendo-db
+          property: port
+      - key: DB_DATABASE
+        fromService:
+          type: pserv
+          name: paramendo-db
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          type: pserv
+          name: paramendo-db
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: pserv
+          name: paramendo-db
+          property: password
+
+  # PostgreSQL Database Service
+  - type: pserv
+    name: paramendo-db
+    env: postgres
+    plan: free # Optional: remove or change to a paid plan
+    postgres:
+      version: "14"
