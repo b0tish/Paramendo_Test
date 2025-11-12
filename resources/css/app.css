@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.nav-header {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 9;
+}
+
+.nav-header ul li a {
+	position: relative;
+}
+
+.nav-header ul li a::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background-color: white;
+	transition: width 0.3s ease-in-out;
+}
+
+.nav-header ul li a:hover::after {
+	width: 100%;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+	filter: invert(1);
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+.drawer-menu {
+	transform: translateX(100%);
+	transition: transform 0.3s ease-out;
+}
+
+.drawer-menu.open {
+	transform: translateX(0);
+}
