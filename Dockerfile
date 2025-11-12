@@ -39,8 +39,4 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 EXPOSE 80
 
 # ✅ Startup Script: runs Laravel setup tasks, then launches Apache
-CMD bash -c "\
-  php artisan key:generate --force && \
-  php artisan migrate --force && \
-  php artisan storage:link && \
-  apache2-foreground"
+CMD ["apache2-foreground"]
